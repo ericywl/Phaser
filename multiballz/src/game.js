@@ -9,6 +9,7 @@ var game = new Phaser.Game(640 * gameOptions.scale, 960 * gameOptions.scale, Pha
 function preload() {
     game.load.image('ball', 'assets/ball.png');
     game.load.image('trajectory', 'assets/trajectory.png');
+    game.load.image('panel', 'assets/panel.png');
 }
 
 var ball;
@@ -18,15 +19,19 @@ var trajectory;
 function create() {
     ball = createBall(game.world.centerX, game.world.height - 20);
     trajectory = createTrajectory(ball.x, ball.y);
-    game.input.onDown.add(shootBall, this);
+
+    // var panel = game.add.image(game.world.centerX, game.world.centerY, 'panel');
 }
 
 function update() {
+    // change trajectory angle based on mouse pointer
     var pointerPos = game.input.activePointer.position;
     var direction = Phaser.Math.angleBetween(ball.x, ball.y, pointerPos.x, pointerPos.y);
-
     trajectory.position.set(ball.x, ball.y);
     trajectory.angle = Phaser.Math.radToDeg(direction) + 90;
+
+    // shoot the ball on mouse press
+    game.input.onDown.add(shootBall, this);
 }
 
 function createBall(x, y) {
@@ -42,7 +47,7 @@ function createBall(x, y) {
 }
 
 function createTrajectory(x, y) {
-    var newTrajectory = game.add.sprite(x, y, 'trajectory');
+    var newTrajectory = game.add.image(x, y, 'trajectory');
     newTrajectory.anchor.set(0.5, 1);
     newTrajectory.scale.set(gameOptions.scale);
 
